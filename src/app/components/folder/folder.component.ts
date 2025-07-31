@@ -14,7 +14,7 @@ export class FolderComponent implements OnInit {
   public folderName: string = '';
   private fs = inject(FileSystemService);
   public files: File[] = [];
-
+  public selectedImage: string | null = null;
 
   async ngOnInit() {
     const slug = this.route.snapshot.paramMap.get('folderName')!;
@@ -25,6 +25,14 @@ export class FolderComponent implements OnInit {
 
     this.files = await this.fs.getFilesInDirectory(this.folderName);
 
+  }
+
+  openImageModal(file: File) {
+    this.selectedImage = URL.createObjectURL(file);
+  }
+
+  closeImageModal() {
+    this.selectedImage = null;
   }
 
   private slugify(name: string): string {

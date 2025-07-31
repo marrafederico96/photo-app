@@ -4,10 +4,20 @@
     @if (files.length > 0) {
     <div class="image-grid">
         @for (file of files; track file.name) {
-        <img [src]="imageToUrl(file)" [alt]="file.name" class="image" />
+        <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
+            <img (click)="openImageModal(file)" [src]="imageToUrl(file)" [alt]="file.name" class="image" />
+            <p>{{file.name}}</p>
+        </div>
         }
     </div>
     } @else {
     <h3>No images found in this folder</h3>
     }
+
+    @if (selectedImage) {
+    <div class="modal" (click)="closeImageModal()">
+        <img [src]="selectedImage" style="max-width: 90vw; max-height: 90vh;" />
+    </div>
+    }
+
 </main>
