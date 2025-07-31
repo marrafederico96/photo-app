@@ -3,7 +3,7 @@
 
     @if (files().length > 0) {
     <div style="overflow-x: auto;">
-        <table mat-table [dataSource]="files()">
+        <table style="width: 100%;" mat-table [dataSource]="files()">
             <ng-container matColumnDef="preview">
                 <th mat-header-cell *matHeaderCellDef> Preview </th>
                 <td mat-cell *matCellDef="let file">
