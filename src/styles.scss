@@ -1,5 +1,9 @@
 @use '@angular/material' as mat;
 
+* {
+  box-sizing: border-box;
+}
+
 html {
   @include mat.theme((color: (primary: mat.$azure-palette,
         tertiary: mat.$blue-palette,
