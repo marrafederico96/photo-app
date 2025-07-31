@@ -11,11 +11,12 @@ html {
       typography: Roboto,
       density: 0,
     ));
+  overscroll-behavior: none;
 }
 
 body {
   color-scheme: dark;
-
+  overscroll-behavior: none;
   background-color: var(--mat-sys-surface);
   color: var(--mat-sys-on-surface);
   font: var(--mat-sys-body-medium);
