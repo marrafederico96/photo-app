@@ -7,7 +7,6 @@
         <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
             <img loading="lazy" (click)="openImageModal(file)" [src]="imageToUrl(file)" [alt]="file.name"
                 class="image" />
-            <p>{{file.name}}</p>
         </div>
         }
     </div>
@@ -17,7 +16,7 @@
 
     @if (selectedImage) {
     <div class="modal" (click)="closeImageModal()">
-        <img [src]="selectedImage" style="max-width: 90vw; max-height: 90vh;" />
+        <img loading="lazy" [src]="selectedImage" style="max-width: 90vw; max-height: 90vh;" />
     </div>
     }
 

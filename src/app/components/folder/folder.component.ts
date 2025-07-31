@@ -2,7 +2,6 @@ import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FileSystemService } from '../../services/file-system.service';
 
-
 @Component({
   selector: 'app-folder',
   imports: [],
@@ -15,6 +14,7 @@ export class FolderComponent implements OnInit {
   private fs = inject(FileSystemService);
   public files: File[] = [];
   public selectedImage: string | null = null;
+  private urlCache = new Map<File, string>();
 
   async ngOnInit() {
     const slug = this.route.snapshot.paramMap.get('folderName')!;
@@ -26,6 +26,11 @@ export class FolderComponent implements OnInit {
     this.files = await this.fs.getFilesInDirectory(this.folderName);
 
   }
+
+  ngOnDestroy() {
+    this.urlCache.forEach(url => URL.revokeObjectURL(url));
+  }
+
 
   openImageModal(file: File) {
     this.selectedImage = URL.createObjectURL(file);
@@ -40,6 +45,10 @@ export class FolderComponent implements OnInit {
   }
 
   imageToUrl(file: File): string {
-    return URL.createObjectURL(file);
+    if (!this.urlCache.has(file)) {
+      const url = URL.createObjectURL(file);
+      this.urlCache.set(file, url);
+    }
+    return this.urlCache.get(file)!;
   }
 }
