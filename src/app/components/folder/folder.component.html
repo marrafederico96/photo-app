@@ -5,7 +5,8 @@
     <div class="image-grid">
         @for (file of files; track file.name) {
         <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
-            <img (click)="openImageModal(file)" [src]="imageToUrl(file)" [alt]="file.name" class="image" />
+            <img loading="lazy" (click)="openImageModal(file)" [src]="imageToUrl(file)" [alt]="file.name"
+                class="image" />
             <p>{{file.name}}</p>
         </div>
         }
