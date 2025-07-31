@@ -56,7 +56,8 @@ export class HomeComponent implements OnInit {
       if (!file) return;
 
       const nextIndex = await this.getNextImageIndex(folder, baseName);
-      const fileName = `${baseName}-${nextIndex}.jpg`;
+      const originalExt = file.name.split('.').pop() || 'jpg';
+      const fileName = `${baseName}-${nextIndex}.${originalExt}`;
       const fileHandle = await folder.getFileHandle(fileName, { create: true });
       const writable = await fileHandle.createWritable();
       await writable.write(await file.arrayBuffer());
@@ -68,11 +69,14 @@ export class HomeComponent implements OnInit {
     input.click();
   }
 
+
   private async getNextImageIndex(dirHandle: FileSystemDirectoryHandle, baseName: string): Promise<number> {
     let maxIndex = 0;
+    const pattern = new RegExp(`^${baseName}-(\\d+)\\.[a-zA-Z0-9]+$`);
+
     for await (const entry of dirHandle.values()) {
       if (entry.kind === 'file') {
-        const match = entry.name.match(new RegExp(`^${baseName}-(\\d+)\\.jpg$`));
+        const match = entry.name.match(pattern);
         if (match) {
           const num = parseInt(match[1], 10);
           if (!isNaN(num)) {
@@ -83,8 +87,6 @@ export class HomeComponent implements OnInit {
     }
     return maxIndex + 1;
   }
-
-
 
   slugify(name: string): string {
     return name.trim().toLowerCase().replace(/\s+/g, '-');
