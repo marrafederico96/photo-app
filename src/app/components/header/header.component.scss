@@ -1,0 +1,16 @@
+.mat-toolbar {
+    padding: 10px 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center
+}
+
+.mdc-button {
+    border-radius: 5px;
+}
+
+.mat-mdc-mini-fab {
+    background-color: #3e4759;
+    border-radius: 5px;
+}

@@ -1,0 +1,28 @@
+.error {
+    color: red;
+}
+
+.list-dir {
+    width: 100%;
+    display: flex;
+    gap: 10px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.input-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.mdc-button {
+    border-radius: 5px;
+}
+
+.mat-mdc-mini-fab {
+    background-color: #3e4759;
+    border-radius: 5px;
+}

@@ -1,0 +1,13 @@
+<main class="container">
+    <h2>{{folderName}}</h2>
+
+    @if (files.length > 0) {
+    <div class="image-grid">
+        @for (file of files; track file.name) {
+        <img [src]="imageToUrl(file)" [alt]="file.name" class="image" />
+        }
+    </div>
+    } @else {
+    <h3>No images found in this folder</h3>
+    }
+</main>

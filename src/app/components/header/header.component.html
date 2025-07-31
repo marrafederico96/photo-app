@@ -1,0 +1,19 @@
+<mat-toolbar>
+    <a matMiniFab href="/">
+        <mat-icon fontIcon="home"></mat-icon>
+    </a>
+    @if (fs.mainDirHandle(); as handle) {
+    <div style="display: flex;flex-direction: row;justify-content: center;align-items: center; gap:10px">
+        <button matButton="tonal">
+            <mat-icon fontIcon="folder"></mat-icon>
+            {{ handle.name }}</button>
+        <button matMiniFab color="primary" (click)="fs.requestMainDirectory()"><mat-icon
+                fontIcon="edit"></mat-icon></button>
+    </div>
+    } @else {
+    <button (click)="fs.requestMainDirectory()" matButton="tonal">
+        Select Main Directory
+    </button>
+    }
+</mat-toolbar>
+<hr />
