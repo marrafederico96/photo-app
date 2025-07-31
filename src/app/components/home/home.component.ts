@@ -37,66 +37,35 @@ export class HomeComponent implements OnInit {
     }
   }
 
+  async openCameraAndSaveTo(dir: FileSystemHandle) {
 
-  async openCamera() {
-    try {
-      if (this.currentStream) {
-        this.currentStream.getTracks().forEach(track => track.stop());
-      }
-      const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
-      this.currentStream = stream;
-      this.videoElement = document.querySelector('video#camera')!;
-      this.videoElement.srcObject = stream;
-      await this.videoElement.play();
-    } catch (err) {
-      console.error('Errore apertura fotocamera', err);
-    }
-  }
-  takePhoto(dir: FileSystemHandle) {
-    if (!this.videoElement) {
-      console.error('Video element non inizializzato');
-      return;
-    }
+    if (dir.kind !== 'directory') return;
+    const folder = dir as FileSystemDirectoryHandle;
 
-    const canvas = document.createElement('canvas');
-    canvas.width = this.videoElement.videoWidth;
-    canvas.height = this.videoElement.videoHeight;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) {
-      console.error('Impossibile ottenere il contesto 2D del canvas');
-      return;
-    }
-    ctx.drawImage(this.videoElement, 0, 0, canvas.width, canvas.height);
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.capture = 'environment';
+    input.style.display = 'none';
+    document.body.appendChild(input);
 
-    canvas.toBlob(async (blob) => {
-      if (!blob) {
-        console.error('Impossibile creare blob dall\'immagine');
-        return;
-      }
+    const baseName = this.slugify(folder.name);
 
-      try {
-        const mainDir = this.fs.mainDirHandle();
-        if (!mainDir) {
-          console.error('Main directory non selezionata');
-          return;
-        }
-        const folder = await mainDir.getDirectoryHandle(dir.name);
+    input.onchange = async () => {
+      const file = input.files?.[0];
+      if (!file) return;
 
-        // Calcola nome file (es: cartella-1.jpg)
-        const slugName = this.slugify(dir.name);
-        const nextIndex = await this.getNextImageIndex(folder, slugName);
-        const fileName = `${slugName}-${nextIndex}.jpg`;
+      const nextIndex = await this.getNextImageIndex(folder, baseName);
+      const fileName = `${baseName}-${nextIndex}.jpg`;
+      const fileHandle = await folder.getFileHandle(fileName, { create: true });
+      const writable = await fileHandle.createWritable();
+      await writable.write(await file.arrayBuffer());
+      await writable.close();
 
-        const fileHandle = await folder.getFileHandle(fileName, { create: true });
-        const writable = await fileHandle.createWritable();
-        await writable.write(blob);
-        await writable.close();
+      document.body.removeChild(input);
+    };
 
-        console.log('Foto salvata:', fileName);
-      } catch (err) {
-        console.error('Errore nel salvataggio della foto:', err);
-      }
-    }, 'image/jpeg');
+    input.click();
   }
 
   private async getNextImageIndex(dirHandle: FileSystemDirectoryHandle, baseName: string): Promise<number> {
