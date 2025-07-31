@@ -1,14 +1,34 @@
 <main class="container">
-    <h2>{{folderName}}</h2>
+    <h2>{{currentDir()?.name}}</h2>
 
-    @if (files.length > 0) {
-    <div class="image-grid">
-        @for (file of files; track file.name) {
-        <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
-            <img loading="lazy" (click)="openImageModal(file)" [src]="imageToUrl(file)" [alt]="file.name"
-                class="image" />
-        </div>
-        }
+    @if (files().length > 0) {
+    <div style="overflow-x: auto;">
+        <table mat-table [dataSource]="files()">
+            <ng-container matColumnDef="preview">
+                <th mat-header-cell *matHeaderCellDef> Preview </th>
+                <td mat-cell *matCellDef="let file">
+                    <img [src]="imageToUrl(file)" alt="{{ file.name }}"
+                        style="width: 40px; height: 40px; cursor: pointer;" loading="lazy" />
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef> Name </th>
+                <td mat-cell *matCellDef="let file"> {{ file.name }} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let file">
+                    <button matMinifab (click)="deleteFile(file); $event.stopPropagation()">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr (click)="openImageModal(row)" mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
     </div>
     } @else {
     <h3>No images found in this folder</h3>
