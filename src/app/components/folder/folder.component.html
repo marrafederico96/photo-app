@@ -1,7 +1,7 @@
 <main class="container">
 
     @if (this.fs.mainDirHandle()) {
-    <h2>{{this.fs.mainDirHandle()?.name}}</h2>
+    <h2>{{this.currentDir()?.name}}</h2>
 
     <div class="input-container">
         <mat-form-field appearance="outline">

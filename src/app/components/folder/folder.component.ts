@@ -64,7 +64,6 @@ export class FolderComponent implements OnDestroy {
       return;
     }
 
-    let targetHandle: FileSystemDirectoryHandle = mainHandle;
     let successfulNavigation = true;
 
     if (pathSegments.length === 0 || (pathSegments.length === 1 && pathSegments[0] === '')) {
