@@ -1,7 +1,7 @@
 # 📸 PhotoApp
 
 **PhotoApp** è una Progressive Web App (PWA) sviluppata con **Angular**.
-L'app permette all'utente di selezionare una **directory principale**, creare **sottocartelle** e **scattare foto** all'interno di ciascuna di esse. Ogni immagine viene automaticamente salvata con un nome coerente e organizzato, basato sul nome della cartella di appartenenza.
+L'app permette all'utente di selezionare una **directory principale**, creare **sottocartelle** e **scattare foto** all'interno di ciascuna di esse. Ogni immagine viene automaticamente salvata con un nome coerente e organizzato, basato sul nome della cartella di appartenenza. L'App è pensata per essere utilizzata da mobile. 
 
 ## 🧹 Funzionalità principali
 
