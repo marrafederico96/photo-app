@@ -1,59 +1,32 @@
-# PhotoApp
+# 📸 PhotoApp
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.1.0.
+**PhotoApp** è una Progressive Web App (PWA) sviluppata con **Angular**.
+L'app permette all'utente di selezionare una **directory principale**, creare **sottocartelle** e **scattare foto** all'interno di ciascuna di esse. Ogni immagine viene automaticamente salvata con un nome coerente e organizzato, basato sul nome della cartella di appartenenza.
 
-## Development server
+## 🧹 Funzionalità principali
 
-To start a local development server, run:
+* ✅ Selezione di una directory principale locale (File System Access API)
+* 📁 Creazione manuale di sottocartelle
+* 📸 Acquisizione di foto direttamente dall'app (camera del dispositivo)
+* 🔄 Salvataggio automatico delle immagini nella sottocartella selezionata
 
-```bash
-ng serve
-```
+## 🧠 Obiettivo
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Fornire un'app semplice e veloce per organizzare fotografie in tempo reale, utile in contesti come:
 
-## Code scaffolding
+* Documentazione di sopralluoghi
+* Rilievi tecnici
+* Catalogazione di immagini per progetto
+* Archiviazione fotografica organizzata
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## 💡 Tecnologie utilizzate
 
-```bash
-ng generate component component-name
-```
+* [Angular](https://angular.io/) (con supporto PWA)
+* File System Access API (per gestione file locali)
+* TypeScript
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## 📱 Compatibilità
 
-```bash
-ng generate --help
-```
+PhotoApp è ottimizzata per browser moderni che supportano la File System Access API:
 
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+* ✅ Chrome (desktop e Android)
