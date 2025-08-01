@@ -44,5 +44,26 @@ body {
   justify-content: center;
   align-items: flex-start;
   padding: 20px;
+}
 
+.list-dir {
+  width: 100%;
+  display: flex;
+  gap: 10px;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.input-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+
+
+.error {
+  color: red;
 }

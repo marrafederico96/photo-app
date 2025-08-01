@@ -1,15 +1,14 @@
-import { Injectable, signal } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FileSystemService {
   public mainDirHandle = signal<FileSystemDirectoryHandle | null>(null);
-  public directories = signal<FileSystemHandle[]>([]);
+  public rootDirectories = signal<FileSystemDirectoryHandle[]>([]);
 
-  private readonly DB_NAME = 'photo-db';
-  private readonly STORE_NAME = 'handles';
-  private readonly MAIN_DIR_KEY = 'mainDir';
+  private router = inject(Router);
 
   constructor() {
   }
@@ -22,65 +21,54 @@ export class FileSystemService {
         startIn: 'documents'
       });
       this.mainDirHandle.set(handle);
-      await this.loadDirectory();
+      const rootDirs = await this.loadDirectory(handle);
+      this.rootDirectories.set(rootDirs);
+      const sluggedMainDirName = this.slugify(handle.name);
+      await this.router.navigate([sluggedMainDirName]);
     } catch (err) {
       console.log('Finestra di selezione directory chiusa o errore:', err);
     }
   }
 
-  async loadDirectory() {
-    const handle = this.mainDirHandle();
-    if (!handle) {
-      this.directories.set([]);
-      return;
-    }
-
-    const dirs: FileSystemHandle[] = [];
+  async loadDirectory(handle: FileSystemDirectoryHandle): Promise<FileSystemDirectoryHandle[]> {
+    const dirs: FileSystemDirectoryHandle[] = [];
     try {
       for await (const entry of handle.values()) {
         if (entry.kind === "directory") {
-          dirs.push(entry);
+          dirs.push(entry as FileSystemDirectoryHandle);
         }
       }
-      this.directories.set(dirs);
     } catch (err) {
-      console.error('Errore durante la lettura del contenuto della directory:', err);
+      console.error('Errore durante la lettura:', err);
     }
+    return dirs;
   }
 
-  async createDirectory(dirName: string) {
-    const handle = this.mainDirHandle();
-    if (!handle) {
-      throw new Error('La directory principale non è stata selezionata.');
+  async createDirectory(parentDirHandle: FileSystemDirectoryHandle, dirName: string) {
+    if (!parentDirHandle) {
+      throw new Error('La directory genitore non è valida.');
     }
-    return handle.getDirectoryHandle(dirName, { create: true });
+    return parentDirHandle.getDirectoryHandle(dirName, { create: true });
   }
 
-  async getFilesInDirectory(dirName: string): Promise<File[]> {
-    const mainDirHandle = this.mainDirHandle();
-    if (!mainDirHandle) {
-      throw new Error('Directory principale non selezionata');
+  async getFilesInDirectory(dirHandle: FileSystemDirectoryHandle): Promise<File[]> {
+    if (!dirHandle) {
+      throw new Error('Handle della directory non valido');
     }
-
-    try {
-
-      const dirHandle = await mainDirHandle.getDirectoryHandle(dirName, { create: false });
-
-      const files: File[] = [];
-      for await (const entry of dirHandle.values()) {
-        if (entry.kind === 'file') {
-          const fileHandle = entry as FileSystemFileHandle;
-          const file = await fileHandle.getFile();
-          if (file.type.startsWith('image/')) {
-            files.push(file);
-          }
+    const files: File[] = [];
+    for await (const entry of dirHandle.values()) {
+      if (entry.kind === 'file') {
+        const fileHandle = entry as FileSystemFileHandle;
+        const file = await fileHandle.getFile();
+        if (file.type.startsWith("image/")) {
+          files.push(file);
         }
       }
-      return files;
-
-    } catch (err) {
-      return [];
     }
+    return files;
   }
 
+  slugify(name: string): string {
+    return name.trim().toLowerCase().replace(/\s+/g, '-');
+  }
 }

@@ -10,4 +10,6 @@ import { HeaderComponent } from "./components/header/header.component";
 })
 export class App {
   protected readonly title = signal('photo-app');
+
+
 }

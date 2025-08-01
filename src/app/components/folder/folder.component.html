@@ -1,43 +1,71 @@
 <main class="container">
-    <h2>{{currentDir()?.name}}</h2>
 
-    @if (files().length > 0) {
+    @if (this.fs.mainDirHandle()) {
+    <h2>{{this.fs.mainDirHandle()?.name}}</h2>
+
+    <div class="input-container">
+        <mat-form-field appearance="outline">
+            <mat-label>Directory Name</mat-label>
+            <input required matInput placeholder="Create Directory" [formControl]="dirName" />
+        </mat-form-field>
+        <button (click)="create()" [disabled]="dirName.invalid" matButton="tonal">
+            <mat-icon fontIcon="create_new_folder"></mat-icon>
+            Create</button>
+    </div>
+
+    @if (dataSource().length >0) {
     <div style="width: 100%;">
-        <table mat-table [dataSource]="files()">
+        <table mat-table [dataSource]="dataSource()">
+
             <ng-container matColumnDef="preview">
-                <th mat-header-cell *matHeaderCellDef> Preview </th>
-                <td mat-cell *matCellDef="let file">
-                    <img [src]="imageToUrl(file)" alt="{{ file.name }}"
-                        style="width: 40px; height: 40px; cursor: pointer;" loading="lazy" />
+                <th mat-header-cell *matHeaderCellDef>Type</th>
+                <td mat-cell *matCellDef="let item" style="width: 60px;">
+                    @if (item.kind === 'directory') {
+                    <mat-icon>folder</mat-icon>
+                    } @else {
+                    <img [src]="imageToUrl(item)" alt="{{ item.name }}" class="preview-img" loading="lazy" />
+                    }
                 </td>
             </ng-container>
 
             <ng-container matColumnDef="name">
-                <th mat-header-cell *matHeaderCellDef> Name </th>
-                <td mat-cell *matCellDef="let file"> {{ file.name }} </td>
-            </ng-container>
-
-            <ng-container matColumnDef="actions">
-                <th mat-header-cell *matHeaderCellDef></th>
-                <td mat-cell *matCellDef="let file">
-                    <button matMinifab (click)="deleteFile(file); $event.stopPropagation()">
-                        <mat-icon>delete</mat-icon>
-                    </button>
+                <th mat-header-cell *matHeaderCellDef>Name</th>
+                <td mat-cell *matCellDef="let item" class="td-link">
+                    @if (item.kind === 'directory') {
+                    <a [routerLink]="generateLinkFolder(item.name)" [routerLinkActive]="'active'" class="item-link">
+                        {{ item.name }}
+                    </a>
+                    } @else {
+                    <span>{{ item.name }}</span>
+                    }
                 </td>
             </ng-container>
 
-            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr (click)="openImageModal(row)" mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef>Actions</th>
+                <td mat-cell *matCellDef="let item">
+                    @if (item.kind !== 'directory') {
+                    <button mat-icon-button color="warn" (click)="deleteFile(item); $event.stopPropagation()">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                    } @else {
+                    <button matMiniFab (click)="photo.openCameraAndSaveTo(item)">
+                        <mat-icon fontIcon="photo_camera"></mat-icon>
+                    </button>
+                    }
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="['preview', 'name', 'actions']"></tr>
+            <tr mat-row [class.row-clickable]="item.kind !== 'directory'"
+                *matRowDef="let item; columns: ['preview', 'name', 'actions'];">
+            </tr>
         </table>
     </div>
-    } @else {
-    <h3>No images found in this folder</h3>
+    }
+    }@else {
+    <h2>Select Main Directory</h2>
     }
 
-    @if (selectedImage) {
-    <div class="modal" (click)="closeImageModal()">
-        <img loading="lazy" [src]="selectedImage" style="max-width: 90vw; max-height: 90vh;" />
-    </div>
-    }
 
 </main>
